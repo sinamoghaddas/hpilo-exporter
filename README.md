@@ -59,7 +59,13 @@ hpilo-exporter [--address=0.0.0.0 --port=8080 --endpoint="/metrics"]
 
 ### Docker
 
-Build the image
+Prebuild images are available from our docker repository:
+
+idnt/prometheus-exporter-hpilo:dev - latest development build
+
+idnt/prometheus-exporter-hpilo:latest - latest stable build
+
+Build the image yourself
 ```
 docker build --rm -t hpilo-exporter .
 ```

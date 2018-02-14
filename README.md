@@ -54,7 +54,7 @@ pip install -e $HPILO_EXPORTER_DIR
 
 Then just:
 ```
-hpilo-exporter [--address=0.0.0.0 --port=8080 --endpoint="/metrics"]
+hpilo-exporter [--address=0.0.0.0 --port=9100 --endpoint="/metrics"]
 ```
 
 ### Docker
@@ -79,17 +79,17 @@ docker build --rm -t hpilo-exporter .
 
 To run the container
 ```
-docker run -p 8080:8080 hpilo-exporter:latest
+docker run -p 9100:9100 hpilo-exporter:latest
 ```
 
 You can then call the web server on the defined endpoint, `/metrics` by default.
 ```
-curl 'http://127.0.0.1:8080/metrics?ilo_host=127.0.0.1&ilo_port=9018&ilo_user=admin&ilo_password=admin'
+curl 'http://127.0.0.1:9100/metrics?ilo_host=127.0.0.1&ilo_port=9018&ilo_user=admin&ilo_password=admin'
 ```
 
 Passing argument to the docker run command
 ```
-docker run -p 8080:8080 hpilo-exporter:latest --port 8082 --ilo_user my_user --ilo_password my_secret_password
+docker run -p 9100:9100 hpilo-exporter:latest --port 8082 --ilo_user my_user --ilo_password my_secret_password
 ```
 
 ### Docker compose

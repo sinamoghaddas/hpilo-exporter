@@ -96,12 +96,13 @@ class RequestHandler(BaseHTTPRequestHandler):
 	    
             # get health at glance
             health_at_glance = ilo.get_embedded_health()['health_at_a_glance']
+            
             if health_at_glance is not None:
                 for key, value in health_at_glance.items():
                     for status in value.items():
                         if status[0] == 'status':
                             gauge = 'hpilo_{}_gauge'.format(key)
-                            if status[1].upper() == 'OK' or status[1].upper() == "FULLY REDUNDANT":
+                            if status[1].upper() == 'OK':
                                 prometheus_metrics.gauges[gauge].labels(product_name=product_name,
                                                                         server_name=server_name).set(0)
                             elif status[1].upper() == 'DEGRADED':

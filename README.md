@@ -1,6 +1,6 @@
 # HP iLO Metrics Exporter
 
-Blackbox likes exporter used to exports HP Server Integrated Lights Out (iLO) states to Prometheus.
+Blackbox like exporter used to export HP Server Integrated Lights Out (iLO) metrics to Prometheus. ILO version 1 to 4 is supported.
 
 ### Gauges
 
@@ -11,10 +11,11 @@ Here are the status code of gauge
 2 - Dead (Other)
 ```
 
-
 ### Output example
 
-Example of status of your iLO
+hpilo-exporter is using [hpilo] (https://seveas.github.io/python-hpilo/) to retrieve health information. A typical 
+reponse from a health_at_a_glance call will look like:
+
 ```
 health_at_a_glance:
   battery: {status: OK}
@@ -61,13 +62,64 @@ Then just:
 hpilo-exporter [--address=0.0.0.0 --port=9416 --endpoint="/metrics"]
 ```
 
+### Requesting metrics
+
+To request metrics you have to provide the ilo target. This can be done by providing
+query arguments or by setting environemnt varaibles.
+
+A request with query arguments will look like:
+
+```
+curl 'http://127.0.0.1:9416/metrics?ilo_host=127.0.0.1&ilo_port=443&ilo_user=admin&ilo_password=admin'
+```
+
+To specify the target using environment variables you have to define:
+
+```
+ILO_HOST=127.0.0.1
+ILO_PORT=443
+ILO_USER=admin
+ILO_PASSWORD=admin
+```
+
+Now you can omit the query arguments on the metrics endpoint:
+
+```
+curl 'http://127.0.0.1:9416/metrics'
+```
+
+Any query argument will override the default provided on the environment.
+
+### Caching
+
+Requesting metrics from iLO is not exactly the fastet operation and prometheus may timeout
+when trying to scrape the metrics endpoint. To work around this issue hpilo-exporter offers 
+a cache mode. 
+
+With the cache mode activated the first request will trigger requesting metrics from ilo 
+in the background and you will receive an error response. As soon as the first background 
+metrics collection completes, hpilo-exporter will answer with the last operations result and 
+schedules a new background metrics collection if not already in progress.
+
+To enable the cache mode you can pass
+
+```
+ilo_cached=true
+```
+
+with your query parameters or set the environment variable
+
+```
+ILO_CACHED=true
+```
+
+
 ### Docker
 
 Prebuild images are available from the docker repository:
 ```
 idnt/hpilo-exporter:latest
 ```
-
 
 To build the image yourself
 ```
@@ -79,12 +131,7 @@ To run the container
 docker run -p 9416:9416 hpilo-exporter:latest
 ```
 
-You can then call the web server on the defined endpoint, `/metrics` by default.
-```
-curl 'http://127.0.0.1:9416/metrics?ilo_host=127.0.0.1&ilo_port=443&ilo_user=admin&ilo_password=admin'
-```
-
-Passing argument to the docker run command
+Passing argument to the docker run command:
 ```
 docker run -p 9416:9416 hpilo-exporter:latest --port 9416 --ilo_user my_user --ilo_password my_secret_password
 ```
@@ -108,7 +155,7 @@ hpilo:
 
 ### Kubernetes
 
-A helm chart is available at [prometheus-helm-addons](https://github.com/IDNT/prometheus-helm-addons).
+A helm chart designed for openstack-helm deployments is available at [prometheus-helm-addons](https://github.com/IDNT/prometheus-helm-addons).
 
 ### Prometheus config
 
@@ -136,3 +183,5 @@ Assuming:
       replacement: hpilo:8082  # hpilo exporter.
 ```
 
+
+             

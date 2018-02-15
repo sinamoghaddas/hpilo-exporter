@@ -143,7 +143,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             ilo_port = int(query_components.get('ilo_port', [''])[0] or os.environ['ILO_PORT'])
             ilo_user = query_components.get('ilo_user', [''])[0] or os.environ['ILO_USER']
             ilo_password = query_components.get('ilo_password', [''])[0] or os.environ['ILO_PASSWORD']
-            ilo_cached = (query_components.get('ilo_cached', ['false'])[0] or os.environ.get('ILO_CACHED', 'false')) in ['true', '1', 't', 'y', 'yes']
+            ilo_cached = (query_components.get('ilo_cached', [''])[0] or os.environ.get('ILO_CACHED', '')) in ['true', '1', 't', 'y', 'yes']
         except KeyError, e:
             print_err("missing parameter %s" % e)
             self.return_error()

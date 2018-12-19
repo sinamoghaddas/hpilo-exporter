@@ -87,7 +87,7 @@ def iloGetMetrics(host, port, user, password):
 					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										server_name=server_name).set(1)
                                 elif len(status) > 2:
-				        elif status[3].upper() == 'DEGRADED':
+				        if status[3].upper() == 'DEGRADED':
 					        prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										        server_name=server_name).set(1)
 				else:

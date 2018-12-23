@@ -73,8 +73,6 @@ def iloGetMetrics(host, port, user, password):
 			for status in value.items():
 				if status[0] == 'status':
 					gauge = 'hpilo_{}_gauge'.format(key)
-				elif status[0] == 'redundancy':
-					gauge = 'hpilo_{}_gauge'.format(key)
 				elif status[1].upper() == 'OK':
 					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										server_name=server_name).set(0)

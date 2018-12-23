@@ -85,6 +85,7 @@ def iloGetMetrics(host, port, user, password):
 				else:
                                         print(status[0])
                                         print(status[1])
+                                        print('hpilo_{}_gauge'.format(key))
                                         print("")
 					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										server_name=server_name).set(2)

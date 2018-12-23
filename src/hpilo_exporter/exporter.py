@@ -88,9 +88,6 @@ def iloGetMetrics(host, port, user, password):
 				elif status[1].upper() == 'REDUNDANT':
 					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										server_name=server_name).set(0)
-				else:
-					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
-										server_name=server_name).set(2)
 
 	# get firmware version
 	fw_version = ilo.get_fw_version()["firmware_version"]

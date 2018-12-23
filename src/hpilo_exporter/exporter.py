@@ -73,7 +73,12 @@ def iloGetMetrics(host, port, user, password):
 			for status in value.items():
 				if status[0] == 'status':
 					gauge = 'hpilo_{}_gauge'.format(key)
+				elif status[0] == 'redundancy':
+					gauge = 'hpilo_{}_gauge'.format(key)
 				elif status[1].upper() == 'OK':
+					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
+										server_name=server_name).set(0)
+				elif status[1].upper() == 'REDUNDANT':
 					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										server_name=server_name).set(0)
 				elif status[1].upper() == 'DEGRADED':
@@ -82,12 +87,6 @@ def iloGetMetrics(host, port, user, password):
 				else:
 					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
 										server_name=server_name).set(2)
-
-				if status[0] == 'redundancy':
-					gauge = 'hpilo_{}_gauge'.format(key)
-				elif status[1].upper() == 'REDUNDANT':
-					prometheus_metrics.gauges[gauge].labels(product_name=product_name,
-										server_name=server_name).set(0)
 
 	# get firmware version
 	fw_version = ilo.get_fw_version()["firmware_version"]
